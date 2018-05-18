@@ -19,9 +19,8 @@ def test_directories(host):
 def test_files(host):
     present = [
         "/etc/td-agent/td-agent.conf",
-        "/usr/local/bin/fluentd_exporter",
-        "/etc/systemd/system/fluentd_exporter.service",
-        "/etc/td-agent/plugin/out_gelf.rb",
+        "/etc/td-agent/plugin/out_cloudwatch_logs.rb",
+        "/etc/td-agent/plugin/out_prometheus.rb",
         "/opt/td-agent/embedded/bin/secure-forward-ca-generate"
     ]
     if present:
@@ -33,8 +32,7 @@ def test_files(host):
 
 def test_service(host):
     present = [
-        "td-agent",
-        "fluentd_exporter"
+        "td-agent"
     ]
     if present:
         for service in present:
@@ -53,10 +51,11 @@ def test_packages(host):
             assert p.is_installed
 
 
-def test_socket(host):
-    present = [
-        "tcp://127.0.0.1:24220"
-    ]
-    for socket in present:
-        s = host.socket(socket)
-        assert s.is_listening
+# Prometheus exporter
+# def test_socket(host):
+#    present = [
+#        "tcp://127.0.0.1:24220"
+#    ]
+#    for socket in present:
+#        s = host.socket(socket)
+#        assert s.is_listening

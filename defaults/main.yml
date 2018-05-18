@@ -1,9 +1,24 @@
 ---
+
+default_retention_in_day: 30
+cycloid_files_watched:
+  - name: syslog
+    path: /var/log/syslog
+    #format: syslog
+    # AWS Cloudwatch specific parameters:
+    #retention_in_day: 60 (https://docs.aws.amazon.com/cli/latest/reference/logs/put-retention-policy.html)
+    #tags:
+    #  project: fluentd
+    #  env: test
+
+# Add td-agent in adm group to get access to all logs
+cycloid_adm_group: true
+
 # paths to custom configuration templates
 fluentd_custom_conf: []
 
-fluentd_metrics: false
+fluentd_metrics: true
+fluentd_cloudwatch: true
+fluentd_cloudwatch_region: eu-west-1
 
 fluentd_plugins: []
-# - { url: "https://raw.githubusercontent.com/emsearcy/fluent-plugin-gelf/master/lib/fluent/plugin/out_gelf.rb" }
-# - { name: "fluent-plugin-secure-forward", 'version': 0.2.3 }

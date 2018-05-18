@@ -1,7 +1,7 @@
 ---
-- name: Install prometheus plugin
+- name: Install cloudwatch plugin
   gem:
-    name: "fluent-plugin-prometheus"
+    name: "fluent-plugin-cloudwatch-logs"
     executable: /opt/td-agent/embedded/bin/fluent-gem
     state: present
     user_install: false

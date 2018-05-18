@@ -44,3 +44,11 @@
     - td-agent
     - "{{ fluentd_plugins_dependencies }}"
   notify: restart td-agent
+
+- name: Add the user 'td-agent' to adm group
+  user:
+    name: td-agent
+    groups: adm
+    append: yes
+  when: cycloid_adm_group
+  notify: restart td-agent

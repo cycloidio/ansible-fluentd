@@ -5,3 +5,8 @@ go_arch_map:
   aarch64: arm64
   armv7l: arm
   armv6l: arm
+
+cycloid_tags:
+  project: "{{ project }}"
+  env: "{{ env }}"
+  cycloid.io: true
