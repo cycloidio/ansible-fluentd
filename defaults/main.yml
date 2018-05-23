@@ -2,14 +2,28 @@
 
 default_retention_in_day: 30
 cycloid_files_watched:
-  - name: syslog
+  # - name: syslog
+  #   path: /var/log/syslog
+  #   format: syslog
+  #   AWS Cloudwatch specific parameters:
+  #   retention_in_day: 60 (https://docs.aws.amazon.com/cli/latest/reference/logs/put-retention-policy.html)
+  #   tags:
+  #     project: fluentd
+  #     env: test
+
+cycloid_system_files_watched:
+  - name: system-syslog
     path: /var/log/syslog
-    #format: syslog
-    # AWS Cloudwatch specific parameters:
-    #retention_in_day: 60 (https://docs.aws.amazon.com/cli/latest/reference/logs/put-retention-policy.html)
-    #tags:
-    #  project: fluentd
-    #  env: test
+  - name: system-auth.log
+    path: /var/log/auth.log
+  - name: system-history_root
+    path: /root/.bash_history
+  - name: system-history_users
+    path: /home/*/.bash_history
+  - name: system-apt
+    path: /var/log/apt/*log
+  - name: system-mail
+    path: /var/log/mail.log
 
 # Add td-agent in adm group to get access to all logs
 cycloid_adm_group: true

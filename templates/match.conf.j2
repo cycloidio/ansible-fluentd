@@ -16,4 +16,20 @@
 {% endif %}
 </match>
 {% endfor %}
+
+{% for file in cycloid_system_files_watched %}
+<match cycloid.{{file.name}}>
+  @type cloudwatch_logs
+  region {{fluentd_cloudwatch_region}}
+  log_group_name {{project}}-{{env}}
+  log_stream_name {{file.name}}
+  auto_create_stream true
+  retention_in_day {{file.retention_in_day | default(default_retention_in_day, true) }}
+{% if file.tags is defined %}
+  tags {{cycloid_tags|combine(file.tags)|to_json}}
+{% else %}
+  tags {{cycloid_tags|to_json}}
+{% endif %}
+</match>
+{% endfor %}
 {% endif %}
