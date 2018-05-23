@@ -32,6 +32,8 @@ cycloid_user_fluentd: root
 fluentd_custom_conf: []
 
 fluentd_metrics: true
+fluentd_prometheus_port: 24231
+
 fluentd_cloudwatch: true
 fluentd_cloudwatch_region: eu-west-1
 
