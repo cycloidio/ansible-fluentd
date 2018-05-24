@@ -1,35 +1,31 @@
 # {{ ansible_managed }}
 
 {% for file in cycloid_files_watched %}
-<worker 0>
-  <source>
-    @type tail
-    tag cycloid.{{file.name}}
-    path {{file.path}}
-    pos_file /var/log/td-agent/cycloid.{{file.name}}.pos
+<source>
+  @type tail
+  tag cycloid.{{file.name}}
+  path {{file.path}}
+  pos_file /var/log/td-agent/cycloid.{{file.name}}.pos
 {% if file.format is defined %}
-  format {{file.format}}
+format {{file.format}}
 {% else %}
-  format none
+format none
 {% endif %}
-  </source>
-</worker>
+</source>
 {% endfor %}
 
 {% for file in cycloid_system_files_watched %}
-<worker 0>
-  <source>
-    @type tail
-    tag cycloid.{{file.name}}
-    path {{file.path}}
-    pos_file /var/log/td-agent/cycloid.{{file.name}}.pos
+<source>
+  @type tail
+  tag cycloid.{{file.name}}
+  path {{file.path}}
+  pos_file /var/log/td-agent/cycloid.{{file.name}}.pos
 {% if file.format is defined %}
-  format {{file.format}}
+format {{file.format}}
 {% else %}
-  format none
+format none
 {% endif %}
-  </source>
-</worker>
+</source>
 {% endfor %}
 
 {% if fluentd_metrics %}

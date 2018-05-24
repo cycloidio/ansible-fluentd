@@ -55,10 +55,14 @@
 
 - name: (systemd) Change the user who run td-agent
   lineinfile: 'dest=/etc/systemd/system/multi-user.target.wants/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{cycloid_user_fluentd}}"'
-  when: tdagent_service
+  when: tdagent_service.stat.exists
+
+- name: (systemd) Force a daemon reload
+  systemd: daemon_reload=yes
+  when: tdagent_service.stat.exists
   notify: restart td-agent
 
 - name: (default) Change the user who run td-agent
   lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{cycloid_user_fluentd}}"'
-  when: tdagent_default
+  when: tdagent_default.stat.exists
   notify: restart td-agent

@@ -1,7 +1,7 @@
 ---
 
 default_retention_in_day: 30
-cycloid_files_watched:
+cycloid_files_watched: []
   # - name: syslog
   #   path: /var/log/syslog
   #   format: syslog
