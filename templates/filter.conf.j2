@@ -1,1 +1,8 @@
 # {{ ansible_managed }}
+
+<filter cycloid.*>
+  @type record_transformer
+  <record>
+    hostname ${hostname}
+  </record>
+</filter>

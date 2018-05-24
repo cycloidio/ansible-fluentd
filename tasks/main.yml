@@ -20,6 +20,10 @@
 - include: configure.yml
 
 - include: metrics.yml
+  when: fluentd_metrics
+
+- include: cloudwatch.yml
+  when: fluentd_cloudwatch
 
 - name: Ensure fluentd (td-agent) service is enabled
   service:

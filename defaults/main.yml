@@ -1,9 +1,40 @@
 ---
+
+default_retention_in_day: 30
+cycloid_files_watched: []
+  # - name: syslog
+  #   path: /var/log/syslog
+  #   format: syslog
+  #   AWS Cloudwatch specific parameters:
+  #   retention_in_day: 60 (https://docs.aws.amazon.com/cli/latest/reference/logs/put-retention-policy.html)
+  #   tags:
+  #     project: fluentd
+  #     env: test
+
+cycloid_system_files_watched:
+  - name: system-syslog
+    path: /var/log/syslog
+  - name: system-auth.log
+    path: /var/log/auth.log
+  - name: system-history_root
+    path: /root/.bash_history
+  - name: system-history_users
+    path: /home/*/.bash_history
+  - name: system-apt
+    path: /var/log/apt/*log
+  - name: system-mail
+    path: /var/log/mail.log
+
+# Define the user for fluentd to use
+cycloid_user_fluentd: root
+
 # paths to custom configuration templates
 fluentd_custom_conf: []
 
-fluentd_metrics: false
+fluentd_metrics: true
+fluentd_prometheus_port: 24231
+
+fluentd_cloudwatch: true
+fluentd_cloudwatch_region: eu-west-1
 
 fluentd_plugins: []
-# - { url: "https://raw.githubusercontent.com/emsearcy/fluent-plugin-gelf/master/lib/fluent/plugin/out_gelf.rb" }
-# - { name: "fluent-plugin-secure-forward", 'version': 0.2.3 }

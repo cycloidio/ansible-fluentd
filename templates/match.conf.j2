@@ -1,1 +1,75 @@
 # {{ ansible_managed }}
+
+{% if fluentd_cloudwatch %}
+{% for file in cycloid_files_watched %}
+<match cycloid.{{file.name}}>
+{% if fluentd_metrics %}
+@type copy
+  <store>
+{% endif %}
+  @type cloudwatch_logs
+  @log_level error
+  region {{fluentd_cloudwatch_region}}
+  log_group_name {{project}}-{{env}}
+  log_stream_name {{file.name}}
+  auto_create_stream true
+  retention_in_day {{file.retention_in_day | default(default_retention_in_day, true) }}
+{% if file.tags is defined %}
+  tags {{cycloid_tags|combine(file.tags)|to_json}}
+{% else %}
+  tags {{cycloid_tags|to_json}}
+{% endif %}
+{% if fluentd_metrics %}
+  </store>
+  <store>
+    @type prometheus
+    <metric>
+      name fluentd_output_status_num_records_total
+      type counter
+      desc The total number of outgoing records
+      <labels>
+        tag ${tag}
+        hostname ${hostname}
+      </labels>
+    </metric>
+  </store>
+{% endif %}
+</match>
+{% endfor %}
+
+{% for file in cycloid_system_files_watched %}
+<match cycloid.{{file.name}}>
+{% if fluentd_metrics %}
+@type copy
+  <store>
+{% endif %}
+  @type cloudwatch_logs
+  @log_level error
+  region {{fluentd_cloudwatch_region}}
+  log_group_name {{project}}-{{env}}
+  log_stream_name {{file.name}}
+  auto_create_stream true
+  retention_in_day {{file.retention_in_day | default(default_retention_in_day, true) }}
+{% if file.tags is defined %}
+  tags {{cycloid_tags|combine(file.tags)|to_json}}
+{% else %}
+  tags {{cycloid_tags|to_json}}
+{% endif %}
+{% if fluentd_metrics %}
+  </store>
+  <store>
+    @type prometheus
+    <metric>
+      name fluentd_output_status_num_records_total
+      type counter
+      desc The total number of outgoing records
+      <labels>
+        tag ${tag}
+        hostname ${hostname}
+      </labels>
+    </metric>
+  </store>
+{% endif %}
+</match>
+{% endfor %}
+{% endif %}
