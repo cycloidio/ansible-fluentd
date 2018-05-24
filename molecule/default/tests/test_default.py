@@ -19,9 +19,10 @@ def test_directories(host):
 def test_files(host):
     present = [
         "/etc/td-agent/td-agent.conf",
-        "/etc/td-agent/plugin/out_cloudwatch_logs.rb",
-        "/etc/td-agent/plugin/out_prometheus.rb",
-        "/opt/td-agent/embedded/bin/secure-forward-ca-generate"
+        "/etc/td-agent/conf.d/filter.conf",
+        "/etc/td-agent/conf.d/match.conf",
+        "/etc/td-agent/conf.d/plugin.conf",
+        "/etc/td-agent/conf.d/source.conf"
     ]
     if present:
         for file in present:
@@ -51,11 +52,11 @@ def test_packages(host):
             assert p.is_installed
 
 
-# Prometheus exporter
-# def test_socket(host):
-#    present = [
-#        "tcp://127.0.0.1:24220"
-#    ]
-#    for socket in present:
-#        s = host.socket(socket)
-#        assert s.is_listening
+# Prometheus
+def test_socket(host):
+    present = [
+        "tcp://127.0.0.1:24231"
+    ]
+    for socket in present:
+        s = host.socket(socket)
+        assert s.is_listening
