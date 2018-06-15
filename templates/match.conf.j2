@@ -10,7 +10,7 @@
   @type cloudwatch_logs
   @log_level error
   region {{fluentd_cloudwatch_region}}
-  log_group_name {{project}}-{{env}}
+  log_group_name {{project}}_{{env}}
   log_stream_name {{file.name}}
   auto_create_stream true
   retention_in_day {{file.retention_in_day | default(default_retention_in_day, true) }}
@@ -46,7 +46,7 @@
   @type cloudwatch_logs
   @log_level error
   region {{fluentd_cloudwatch_region}}
-  log_group_name {{project}}-{{env}}
+  log_group_name {{project}}_{{env}}
   log_stream_name {{file.name}}
   auto_create_stream true
   retention_in_day {{file.retention_in_day | default(default_retention_in_day, true) }}
