@@ -1,5 +1,13 @@
 # {{ ansible_managed }}
 
+{% if fluentd_forward %}
+<source>
+  @type forward
+  port {{fluentd_forward_port}}
+  bind 0.0.0.0
+</source>
+{% endif %}
+
 {% for file in cycloid_files_watched %}
 <source>
   @type tail

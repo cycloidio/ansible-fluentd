@@ -28,6 +28,10 @@ cycloid_system_files_watched:
 # Define the user for fluentd to use
 cycloid_user_fluentd: root
 
+# Define a forward source (for example used for docker log driver)
+fluentd_forward: false
+fluentd_forward_port: 24224
+
 # paths to custom configuration templates
 fluentd_custom_conf: []
 
