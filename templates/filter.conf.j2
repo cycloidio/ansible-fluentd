@@ -6,3 +6,29 @@
     hostname ${hostname}
   </record>
 </filter>
+
+{% if fluentd_docker %}
+<filter docker.var.lib.docker.containers.*.*.log>
+  @type docker_metadata
+</filter>
+
+# rewrite_tag_filter does not support nested fields like
+# docker.name, so this exists to flatten the fields
+# so we can use them in our rewrite_tag_filter
+<filter docker.var.lib.docker.containers.*.*.log>
+  @type record_transformer
+  enable_ruby true
+  <record>
+    hostname ${hostname}.${record["docker"]["container_hostname"]}
+    container_name ${record["docker"]["name"]}
+    message ${record["log"]}
+  </record>
+</filter>
+
+# Remove the unnecessary field as the information is already available on
+# other fields.
+<filter docker.container.**>
+  @type record_transformer
+  remove_keys log
+</filter>
+{% endif %}

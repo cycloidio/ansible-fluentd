@@ -52,3 +52,15 @@ format none
   </labels>
 </source>
 {% endif %}
+
+{% if fluentd_docker %}
+<source>
+  @type tail
+  path /var/lib/docker/containers/*/*-json.log
+  pos_file /var/log/td-agent/cycloid.docker.pos
+  time_format %Y-%m-%dT%H:%M:%S
+  tag docker.*
+  format json
+  read_from_head true
+</source>
+{% endif %}

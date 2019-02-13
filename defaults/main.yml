@@ -41,4 +41,6 @@ fluentd_prometheus_port: 24231
 fluentd_cloudwatch: true
 fluentd_cloudwatch_region: eu-west-1
 
+fluentd_docker: false
+
 fluentd_plugins: []
