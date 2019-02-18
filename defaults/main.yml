@@ -1,5 +1,7 @@
 ---
 
+fluentd_apt_repository: "https://packages.treasuredata.com/3/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
+
 default_retention_in_day: 30
 cycloid_files_watched: []
   # - name: syslog

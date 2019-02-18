@@ -13,7 +13,7 @@
 
     - name: add td-agent repository
       apt_repository:
-        repo: "deb https://packages.treasuredata.com/3/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/ {{ ansible_distribution_release|lower }} contrib"
+        repo: "deb {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
         state: present
         update_cache: true
   when: ansible_pkg_mgr == "apt"
@@ -54,7 +54,7 @@
   register: tdagent_default
 
 - name: (systemd) Change the user who run td-agent
-  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{cycloid_user_fluentd}}"'
+  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{ cycloid_user_fluentd }}"'
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
 
 - name: (systemd) Force a daemon reload
@@ -63,6 +63,6 @@
   notify: restart td-agent
 
 - name: (default) Change the user who run td-agent
-  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{cycloid_user_fluentd}}"'
+  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ cycloid_user_fluentd }}"'
   when: tdagent_default.stat.exists
   notify: restart td-agent
