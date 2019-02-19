@@ -1,6 +1,19 @@
 # {{ ansible_managed }}
 
+{% if fluentd_docker %}
+# retag based on the container name and id of the log message
+<match docker.var.lib.docker.containers.*.*.log>
+  @type rewrite_tag_filter
+  <rule>
+    key container_name
+    pattern ^(.+)$
+    tag docker.container.$1
+  </rule>
+</match>
+{% endif %}
+
 {% if fluentd_cloudwatch %}
+
 {% for file in cycloid_files_watched %}
 <match cycloid.{{file.name}}>
 {% if fluentd_metrics %}
@@ -72,4 +85,37 @@
 {% endif %}
 </match>
 {% endfor %}
+
+{% if fluentd_docker %}
+<match docker.container.**>
+  {% if fluentd_metrics %}
+@type copy
+  <store>
+{% endif %}
+  @type cloudwatch_logs
+  @log_level error
+  region {{fluentd_cloudwatch_region}}
+  log_group_name {{project}}_{{env}}
+  log_stream_name_key container_name
+  auto_create_stream true
+  retention_in_days {{default_retention_in_day}}
+  tags {{cycloid_tags|to_json}}
+{% if fluentd_metrics %}
+  </store>
+  <store>
+    @type prometheus
+    <metric>
+      name fluentd_output_status_num_records_total
+      type counter
+      desc The total number of outgoing records
+      <labels>
+        tag ${tag}
+        hostname ${hostname}
+      </labels>
+    </metric>
+  </store>
+{% endif %}
+</match>
+{% endif %}
+
 {% endif %}

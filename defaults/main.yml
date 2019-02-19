@@ -1,5 +1,7 @@
 ---
 
+fluentd_apt_repository: "https://packages.treasuredata.com/3/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
+
 default_retention_in_day: 30
 cycloid_files_watched: []
   # - name: syslog
@@ -40,5 +42,7 @@ fluentd_prometheus_port: 24231
 
 fluentd_cloudwatch: true
 fluentd_cloudwatch_region: eu-west-1
+
+fluentd_docker: false
 
 fluentd_plugins: []

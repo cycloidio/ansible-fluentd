@@ -1,0 +1,11 @@
+---
+- name: Install docker plugins
+  gem:
+    name: "{{ item }}"
+    executable: /opt/td-agent/embedded/bin/fluent-gem
+    state: present
+    user_install: false
+  with_items:
+    - fluent-plugin-docker_metadata_filter
+    - fluent-plugin-rewrite-tag-filter
+  notify: restart td-agent
