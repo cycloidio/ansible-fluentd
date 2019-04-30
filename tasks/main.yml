@@ -10,22 +10,22 @@
   tags:
     - always
 
-- include: preflight.yml
+- include_tasks: preflight.yml
   when: ansible_virtualization_type != "docker"
 
-- include: install.yml
+- include_tasks: install.yml
 
-- include: plugins.yml
+- include_tasks: plugins.yml
 
-- include: configure.yml
+- include_tasks: configure.yml
 
-- include: metrics.yml
+- include_tasks: metrics.yml
   when: fluentd_metrics
 
-- include: cloudwatch.yml
+- include_tasks: cloudwatch.yml
   when: fluentd_cloudwatch
 
-- include: docker.yml
+- include_tasks: docker.yml
   when: fluentd_docker
 
 - name: Ensure fluentd (td-agent) service is enabled
