@@ -46,3 +46,5 @@ fluentd_cloudwatch_region: "{{ lookup('env','AWS_DEFAULT_REGION') | default('eu-
 fluentd_docker: false
 
 fluentd_plugins: []
+
+fluentd_plugins_state: present

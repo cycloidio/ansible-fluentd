@@ -1,8 +1,11 @@
 ---
 - name: Install cloudwatch plugin
   gem:
-    name: "fluent-plugin-cloudwatch-logs"
+    name: "{{ item }}"
     executable: /opt/td-agent/embedded/bin/fluent-gem
-    state: present
+    state: "{{ fluentd_plugins_state }}"
     user_install: false
   notify: restart td-agent
+  with_items:
+    - fluent-plugin-cloudwatch-logs
+    - aws-sdk-core
