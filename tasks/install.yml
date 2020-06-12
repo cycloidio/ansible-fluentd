@@ -1,9 +1,8 @@
 ---
 - name: Install dependencies
   package:
-    name: "{{ item }}"
+    name: "{{ fluentd_dependencies }}"
     state: present
-  with_items: "{{ fluentd_dependencies }}"
 
 - block:
     - name: add APT signing key for td-agent

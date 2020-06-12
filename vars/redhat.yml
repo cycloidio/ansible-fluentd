@@ -1,6 +1,6 @@
 ---
 fluentd_dependencies:
-  - libselinux-python
+  - python3-libselinux
 
 fluentd_plugins_dependencies:
   - gcc
