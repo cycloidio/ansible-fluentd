@@ -1,4 +1,10 @@
 ---
+
+- setup:
+    filter: ansible_*
+  tags:
+    - always
+
 - name: Gather variables for each operating system
   include_vars: "{{ item }}"
   with_first_found:
