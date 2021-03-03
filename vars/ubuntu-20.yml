@@ -3,6 +3,7 @@ fluentd_apt_repository: "https://packages.treasuredata.com/4/{{ ansible_distribu
 
 fluentd_dependencies:
   - apt-transport-https
+  - gnupg
 
 fluentd_plugins_dependencies:
   - libcurl4-gnutls-dev
