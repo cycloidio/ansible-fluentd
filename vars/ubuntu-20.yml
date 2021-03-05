@@ -3,6 +3,7 @@ fluentd_tdagent_version: 4
 
 fluentd_dependencies:
   - apt-transport-https
+  - gnupg
 
 fluentd_plugins_dependencies:
   - libcurl4-gnutls-dev
