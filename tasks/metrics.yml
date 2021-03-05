@@ -2,7 +2,7 @@
 - name: Install prometheus plugin
   gem:
     name: "fluent-plugin-prometheus"
-    executable: /opt/td-agent/embedded/bin/fluent-gem
+    executable: "{{ fluentd_fluentgem_bin }}"
     state: present
     user_install: false
   notify: restart td-agent

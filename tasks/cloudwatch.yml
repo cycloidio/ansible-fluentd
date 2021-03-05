@@ -2,7 +2,7 @@
 - name: Install cloudwatch plugin
   gem:
     name: "fluent-plugin-cloudwatch-logs"
-    executable: /opt/td-agent/embedded/bin/fluent-gem
+    executable: "{{ fluentd_fluentgem_bin }}"
     state: "{{ fluentd_plugins_state }}"
     user_install: false
   notify: restart td-agent
@@ -10,7 +10,7 @@
 - name: Ensure aws-sdk-core latest version
   gem:
     name: "aws-sdk-core"
-    executable: /opt/td-agent/embedded/bin/fluent-gem
+    executable: "{{ fluentd_fluentgem_bin }}"
     state: latest
     user_install: false
   notify: restart td-agent

@@ -1,5 +1,5 @@
 ---
-fluentd_apt_repository: "https://packages.treasuredata.com/4/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
+fluentd_tdagent_version: 4
 
 fluentd_dependencies:
   - apt-transport-https

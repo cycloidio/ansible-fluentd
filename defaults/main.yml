@@ -1,6 +1,7 @@
 ---
+fluentd_tdagent_version: 3
 
-fluentd_apt_repository: "https://packages.treasuredata.com/3/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
+fluentd_apt_repository: "https://packages.treasuredata.com/{{ fluentd_tdagent_version }}/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
 
 default_retention_in_day: 30
 cycloid_files_watched: []
@@ -45,6 +46,7 @@ fluentd_cloudwatch_region: "{{ lookup('env','AWS_DEFAULT_REGION') | default('eu-
 
 fluentd_docker: false
 
+fluentd_fluentgem_bin: "{% if fluentd_tdagent_version > 3 %}/opt/td-agent/bin/fluent-gem{% else %}/opt/td-agent/embedded/bin/fluent-gem{% endif %}"
 fluentd_plugins: []
 
 fluentd_plugins_state: present
