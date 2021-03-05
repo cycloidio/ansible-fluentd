@@ -2,7 +2,7 @@
 - name: Install plugins via name
   gem:
     name: "{{ item.name }}"
-    executable: /opt/td-agent/embedded/bin/fluent-gem
+    executable: "{{ fluentd_fluentgem_bin }}"
     state: "{{ fluentd_plugins_state }}"
     user_install: false
     version: "{{ item.version | default(omit) }}"

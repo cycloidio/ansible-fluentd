@@ -2,7 +2,7 @@
 - name: Install docker plugins
   gem:
     name: "{{ item }}"
-    executable: /opt/td-agent/embedded/bin/fluent-gem
+    executable: "{{ fluentd_fluentgem_bin }}"
     state: present
     user_install: false
   with_items:
