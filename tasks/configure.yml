@@ -3,8 +3,8 @@
   file:
     path: /etc/td-agent/conf.d
     state: directory
-    owner: td-agent
-    group: td-agent
+    owner: "{{ fluentd_user }}"
+    group: "{{ fluentd_user }}"
   with_items:
     - /opt/td-agent
     - /etc/td-agent/conf.d
@@ -13,16 +13,16 @@
   template:
     src: td-agent.conf.j2
     dest: /etc/td-agent/td-agent.conf
-    owner: td-agent
-    group: td-agent
+    owner: "{{ fluentd_user }}"
+    group: "{{ fluentd_user }}"
   notify: restart td-agent
 
 - name: Create additional configuration files
   template:
     src: "{{ item }}.conf.j2"
     dest: "/etc/td-agent/conf.d/{{ item }}.conf"
-    owner: td-agent
-    group: td-agent
+    owner: "{{ fluentd_user }}"
+    group: "{{ fluentd_user }}"
   with_items:
     - source
     - filter
@@ -34,7 +34,7 @@
   template:
     src: "{{ item }}.j2"
     dest: "/etc/td-agent/conf.d/{{ item.split('/')[-1] }}"
-    owner: td-agent
-    group: td-agent
+    owner: "{{ fluentd_user }}"
+    group: "{{ fluentd_user }}"
   with_items: "{{ fluentd_custom_conf }}"
   notify: reload td-agent
