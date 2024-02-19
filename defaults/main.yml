@@ -45,7 +45,7 @@ fluentd_cloudwatch_region: "{{ lookup('env','AWS_DEFAULT_REGION') | default('eu-
 
 fluentd_docker: false
 
-fluentd_fluentgem_bin: "{% if fluentd_tdagent_version > 3 %}/opt/td-agent/bin/fluent-gem{% else %}/opt/td-agent/embedded/bin/fluent-gem{% endif %}"
+fluentd_fluentgem_bin: "{% if fluentd_tdagent_version > 3 %}/opt/fluent/bin/fluent-gem{% else %}/opt/td-agent/embedded/bin/fluent-gem{% endif %}"
 fluentd_plugins: []
 
 fluentd_plugins_state: present
