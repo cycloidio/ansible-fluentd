@@ -1,7 +1,9 @@
 ---
-fluentd_tdagent_version: 3
+fluentd_tdagent_version: 5
+fluentd_user: "{% if fluentd_tdagent_version != '3' %}_fluentd{% else %}td-agent{% endif %}"
 
 fluentd_apt_repository: "https://packages.treasuredata.com/{{ fluentd_tdagent_version }}/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
+
 
 default_retention_in_day: 30
 cycloid_files_watched: []
@@ -28,9 +30,6 @@ cycloid_system_files_watched:
   - name: system-mail
     path: /var/log/mail.log
 
-# Define the user for fluentd to use
-cycloid_user_fluentd: root
-
 # Define a forward source (for example used for docker log driver)
 fluentd_forward: false
 fluentd_forward_port: 24224
@@ -46,7 +45,7 @@ fluentd_cloudwatch_region: "{{ lookup('env','AWS_DEFAULT_REGION') | default('eu-
 
 fluentd_docker: false
 
-fluentd_fluentgem_bin: "{% if fluentd_tdagent_version > 3 %}/opt/td-agent/bin/fluent-gem{% else %}/opt/td-agent/embedded/bin/fluent-gem{% endif %}"
+fluentd_fluentgem_bin: "{% if fluentd_tdagent_version > 3 %}/opt/fluent/bin/fluent-gem{% else %}/opt/td-agent/embedded/bin/fluent-gem{% endif %}"
 fluentd_plugins: []
 
 fluentd_plugins_state: present

@@ -53,7 +53,7 @@
   register: tdagent_default
 
 - name: (systemd) Change the user who run td-agent
-  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{ cycloid_user_fluentd }}"'
+  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{ fluentd_user }}"'
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
 
 - name: (systemd) Force a daemon reload
@@ -62,6 +62,6 @@
   notify: restart td-agent
 
 - name: (default) Change the user who run td-agent
-  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ cycloid_user_fluentd }}"'
+  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
   when: tdagent_default.stat.exists
   notify: restart td-agent
