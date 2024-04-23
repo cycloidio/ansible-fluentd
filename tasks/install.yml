@@ -40,7 +40,8 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - td-agent
+    # - td-agent
+    - fluent-package
     - "{{ fluentd_plugins_dependencies }}"
   notify: restart td-agent
 
@@ -61,7 +62,15 @@
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
   notify: restart td-agent
 
-- name: (default) Change the user who run td-agent
-  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
-  when: tdagent_default.stat.exists
-  notify: restart td-agent
+#- name: (default) Change the user who run td-agent
+#  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
+#  when: tdagent_default.stat.exists
+#  notify: restart td-agent
+
+- name: adding fluentd user to adm group
+  user:
+    name: "{{ fluentd_user }}"
+    groups: adm
+    append: yes
+  become: yes
+
