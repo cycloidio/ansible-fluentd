@@ -21,7 +21,7 @@
   <store>
 {% endif %}
   @type cloudwatch_logs
-  @log_level error
+  @log_level info
   region {{fluentd_cloudwatch_region}}
   log_group_name {{project}}_{{env}}
   log_stream_name {{file.name}}
