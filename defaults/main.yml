@@ -50,5 +50,6 @@ fluentd_plugins: []
 
 fluentd_plugins_state: present
 
+fluentd_service: "{% if fluentd_tdagent_version > 3 %}fluent{% else %}td-agent{% endif %}"
 fluentd_config_dir: "{% if fluentd_tdagent_version > 3 %}fluent{% else %}td-agent{% endif %}"
 fluentd_config_file: "{% if fluentd_tdagent_version > 3 %}fluentd.conf{% else %}td-agent.conf{% endif %}"
