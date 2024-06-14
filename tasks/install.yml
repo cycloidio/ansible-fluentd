@@ -45,15 +45,20 @@
   notify: restart td-agent
 
 - name: Check if systemd exists
-  stat: path=/lib/systemd/system/td-agent.service
+  stat: path="/lib/systemd/system/{{ fluentd_service }}.service"
   register: tdagent_service
 
-- name: Check if default td-agent exists
-  stat: path=/etc/default/td-agent
+- name: Check if default fluentd exists
+  stat: path="/etc/default/{{ fluentd_service }}"
   register: tdagent_default
 
 - name: (systemd) Change the user who run td-agent
-  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{ fluentd_user }}"'
+  lineinfile:
+    dest: "/lib/systemd/system/{{ fluentd_service }}.service"
+    backrefs: yes
+    state: present
+    regexp: "^User=_fluentd"
+    line: "User={{ fluentd_user }}"
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
 
 - name: (systemd) Force a daemon reload
@@ -61,7 +66,7 @@
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
   notify: restart td-agent
 
-- name: (default) Change the user who run td-agent
-  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
-  when: tdagent_default.stat.exists
-  notify: restart td-agent
+# - name: (default) Change the user who run td-agent
+#   lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
+#   when: tdagent_default.stat.exists
+#   notify: restart td-agent

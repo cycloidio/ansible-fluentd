@@ -1,18 +1,18 @@
 ---
 - name: Create td-agent directories
   file:
-    path: /etc/td-agent/conf.d
+    path: "{{ item }}"
     state: directory
     owner: "{{ fluentd_user }}"
     group: "{{ fluentd_user }}"
   with_items:
-    - /opt/td-agent
-    - /etc/td-agent/conf.d
+    - "/opt/{{ fluentd_config_dir }}"
+    - "/etc/{{ fluentd_config_dir }}/conf.d"
 
 - name: Create main configuration file
   template:
     src: td-agent.conf.j2
-    dest: /etc/td-agent/td-agent.conf
+    dest: "/etc/{{ fluentd_config_dir }}/{{ fluentd_config_file }}"
     owner: "{{ fluentd_user }}"
     group: "{{ fluentd_user }}"
   notify: restart td-agent
@@ -20,7 +20,7 @@
 - name: Create additional configuration files
   template:
     src: "{{ item }}.conf.j2"
-    dest: "/etc/td-agent/conf.d/{{ item }}.conf"
+    dest: "/etc/{{ fluentd_config_dir }}/conf.d/{{ item }}.conf"
     owner: "{{ fluentd_user }}"
     group: "{{ fluentd_user }}"
   with_items:
@@ -33,7 +33,7 @@
 - name: Create custom configuration
   template:
     src: "{{ item }}.j2"
-    dest: "/etc/td-agent/conf.d/{{ item.split('/')[-1] }}"
+    dest: "/etc/{{ fluentd_config_dir }}/conf.d/{{ item.split('/')[-1] }}"
     owner: "{{ fluentd_user }}"
     group: "{{ fluentd_user }}"
   with_items: "{{ fluentd_custom_conf }}"
