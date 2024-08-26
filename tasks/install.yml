@@ -7,7 +7,7 @@
 - block:
     - name: add APT signing key for td-agent
       apt_key:
-        url: "https://packages.treasuredata.com/GPG-KEY-td-agent"
+        url: "https://packages.treasuredata.com/GPG-KEY-fluent-package"
         state: present
 
     - name: add td-agent repository
