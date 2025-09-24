@@ -5,35 +5,33 @@
     state: present
 
 - block:
-    - name: add APT signing key for td-agent
-      apt_key:
-        url: "https://packages.treasuredata.com/GPG-KEY-fluent-package"
-        state: present
+    # how to get the key
+    # https://fluentd.cdn.cncf.io/sh/install-debian-bookworm-fluent-package6.sh
+    # curl -o fluent-apt-source.deb https://fluentd.cdn.cncf.io/6/debian/bookworm/pool/contrib/f/fluent-apt-source/fluent-apt-source_2025.8.29-1_all.deb
+    # dpkg-deb -x fluent-apt-source.deb ./extract_dir
+    # - name: Download Fluentd GPG key
+    #   ansible.builtin.get_url:
+    #     url: https://fluentd.cdn.cncf.io/fluent-package.key
+    #     dest: /usr/share/keyrings/fluent-package.gpg
+    #     mode: '0644'
 
-    - name: add td-agent repository
-      apt_repository:
-        repo: "deb {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
-        state: present
-        update_cache: true
-  when: ansible_pkg_mgr == "apt"
+    # - name: Add Fluentd APT repository
+    #   ansible.builtin.apt_repository:
+    #     repo: "deb [signed-by=/usr/share/keyrings/fluent-package.gpg] {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
+    #     state: present
+    #     filename: fluentd
+    #     update_cache: true
 
-- block:
-    - name: add GPG key from Treasure Data, Inc
-      # command: rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
-      rpm_key:
-        key: https://packages.treasuredata.com/GPG-KEY-td-agent
-        validate_certs: false
-        state: present
+    - name: Download Fluentd install script
+      ansible.builtin.get_url:
+        url: https://fluentd.cdn.cncf.io/sh/install-{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}-fluent-package{{ fluentd_tdagent_version }}-lts.sh
+        dest: /tmp/install-fluentd.sh
+        mode: "0755"
 
-    - name: add official repository
-      yum_repository:
-        name: treasuredata
-        description: TreasureData
-        baseurl: "http://packages.treasuredata.com/3/redhat/$releasever/$basearch"
-        file: td
-        gpgcheck: true
-        gpgkey: https://packages.treasuredata.com/GPG-KEY-td-agent
-  when: ansible_pkg_mgr == "yum"
+    - name: Run Fluentd install script
+      ansible.builtin.shell: /tmp/install-fluentd.sh
+      args:
+        creates: /opt/fluent/bin/fluentd
 
 - name: Install fluentd (td-agent) and plugins dependencies
   package:
@@ -65,7 +63,6 @@
   systemd: daemon_reload=yes
   when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
   notify: restart td-agent
-
 # - name: (default) Change the user who run td-agent
 #   lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ fluentd_user }}"'
 #   when: tdagent_default.stat.exists

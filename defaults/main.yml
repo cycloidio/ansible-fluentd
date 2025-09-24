@@ -2,11 +2,11 @@
 fluentd_tdagent_version: 5
 fluentd_user: "{% if fluentd_tdagent_version != '3' %}_fluentd{% else %}td-agent{% endif %}"
 
-fluentd_apt_repository: "https://packages.treasuredata.com/{{ fluentd_tdagent_version }}/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
-
+# fluentd_apt_repository: "https://fluentd.cdn.cncf.io/lts/{{ fluentd_tdagent_version }}/{{ ansible_distribution|lower }}/{{ ansible_distribution_release|lower }}/"
 
 default_retention_in_day: 30
-cycloid_files_watched: []
+cycloid_files_watched:
+  []
   # - name: syslog
   #   path: /var/log/syslog
   #   format: syslog
