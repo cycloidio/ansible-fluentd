@@ -1,8 +1,15 @@
 ---
+- name: Install ntp daemon (chrony on Ubuntu >= 24.04 where ntp was removed)
+  package:
+    name: chrony
+    state: present
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>=')
+
 - name: Install ntp daemon
   package:
     name: ntp
     state: present
+  when: not (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('24.04', '>='))
 
 # ulimit needs full shell
 - name: Register number of file descriptors
