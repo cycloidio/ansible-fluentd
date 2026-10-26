@@ -5,14 +5,22 @@
     state: present
 
 - block:
-    - name: add APT signing key for td-agent
-      apt_key:
+    - name: Ensure apt keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: add APT signing key for td-agent (modern keyring, apt-key removed in Ubuntu 24.04+)
+      get_url:
         url: "https://packages.treasuredata.com/GPG-KEY-td-agent"
-        state: present
+        dest: /etc/apt/keyrings/td-agent.asc
+        mode: "0644"
+        force: true
 
     - name: add td-agent repository
       apt_repository:
-        repo: "deb {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
+        repo: "deb [signed-by=/etc/apt/keyrings/td-agent.asc] {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
         state: present
         update_cache: true
   when: ansible_pkg_mgr == "apt"
