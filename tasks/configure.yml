@@ -1,40 +1,19 @@
 ---
-- name: Create td-agent directories
+- name: Create Fluent Bit configuration directory
   file:
-    path: /etc/td-agent/conf.d
+    path: /etc/fluent-bit
     state: directory
-    owner: td-agent
-    group: td-agent
-  with_items:
-    - /opt/td-agent
-    - /etc/td-agent/conf.d
+    mode: "0755"
 
-- name: Create main configuration file
-  template:
-    src: td-agent.conf.j2
-    dest: /etc/td-agent/td-agent.conf
-    owner: td-agent
-    group: td-agent
-  notify: restart td-agent
+- name: Create Fluent Bit state/log directory (for tail DB files)
+  file:
+    path: /var/log/fluent-bit
+    state: directory
+    mode: "0755"
 
-- name: Create additional configuration files
+- name: Create Fluent Bit main configuration file
   template:
-    src: "{{ item }}.conf.j2"
-    dest: "/etc/td-agent/conf.d/{{ item }}.conf"
-    owner: td-agent
-    group: td-agent
-  with_items:
-    - source
-    - filter
-    - match
-    - plugin
-  notify: reload td-agent
-
-- name: Create custom configuration
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/td-agent/conf.d/{{ item.split('/')[-1] }}"
-    owner: td-agent
-    group: td-agent
-  with_items: "{{ fluentd_custom_conf }}"
-  notify: reload td-agent
+    src: fluent-bit.conf.j2
+    dest: /etc/fluent-bit/fluent-bit.conf
+    mode: "0644"
+  notify: restart fluent-bit

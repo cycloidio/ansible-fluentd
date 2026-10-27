@@ -1,8 +1,5 @@
 ---
-- name: Install prometheus plugin
-  gem:
-    name: "fluent-plugin-prometheus"
-    executable: "{{ fluentd_fluentgem_bin }}"
-    state: present
-    user_install: false
-  notify: restart td-agent
+# No-op: Fluent Bit exposes metrics natively (storage.metrics in [SERVICE]).
+# The previous td-agent prometheus gem is no longer installed.
+- name: Fluent Bit metrics (no-op, built-in)
+  meta: noop

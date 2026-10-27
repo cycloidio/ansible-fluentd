@@ -1,16 +1,13 @@
 ---
-- name: reload td-agent
+- name: restart fluent-bit
   service:
-    name: td-agent
-    state: reloaded
-
-- name: restart td-agent
-  service:
-    name: td-agent
+    name: fluent-bit
     state: restarted
-
-- name: restart fluentd metrics service
-  systemd:
     daemon_reload: true
-    name: fluentd_exporter
+
+# Fluent Bit has no reload; perform a restart instead.
+- name: reload fluent-bit
+  service:
+    name: fluent-bit
     state: restarted
+    daemon_reload: true

@@ -1,11 +1,4 @@
 ---
-- name: Install docker plugins
-  gem:
-    name: "{{ item }}"
-    executable: "{{ fluentd_fluentgem_bin }}"
-    state: present
-    user_install: false
-  with_items:
-    - fluent-plugin-docker_metadata_filter
-    - fluent-plugin-rewrite-tag-filter
-  notify: restart td-agent
+# No-op: previous td-agent gem-based docker plugins are not used with Fluent Bit.
+- name: Fluent Bit docker plugins (no-op)
+  meta: noop

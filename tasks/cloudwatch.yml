@@ -1,16 +1,5 @@
 ---
-- name: Install cloudwatch plugin
-  gem:
-    name: "fluent-plugin-cloudwatch-logs"
-    executable: "{{ fluentd_fluentgem_bin }}"
-    state: "{{ fluentd_plugins_state }}"
-    user_install: false
-  notify: restart td-agent
-
-- name: Ensure aws-sdk-core latest version
-  gem:
-    name: "aws-sdk-core"
-    executable: "{{ fluentd_fluentgem_bin }}"
-    state: latest
-    user_install: false
-  notify: restart td-agent
+# No-op: Fluent Bit includes the cloudwatch_logs output plugin natively.
+# No gem installation is required anymore.
+- name: Fluent Bit cloudwatch output (no-op, built-in)
+  meta: noop

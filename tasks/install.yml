@@ -1,75 +1,29 @@
 ---
-- name: Install dependencies
+- name: Install prerequisites
   package:
-    name: "{{ fluentd_dependencies }}"
+    name:
+      - apt-transport-https
+      - curl
+      - gnupg
     state: present
+    update_cache: true
 
-- block:
-    - name: Ensure apt keyrings directory exists
-      file:
-        path: /etc/apt/keyrings
-        state: directory
-        mode: "0755"
+- name: Download Fluent Bit APT signing key
+  get_url:
+    url: "https://packages.fluentbit.io/fluentbit.key"
+    dest: /usr/share/keyrings/fluentbit-keyring.gpg
+    mode: "0644"
 
-    - name: add APT signing key for td-agent (modern keyring, apt-key removed in Ubuntu 24.04+)
-      get_url:
-        url: "https://packages.treasuredata.com/GPG-KEY-td-agent"
-        dest: /etc/apt/keyrings/td-agent.asc
-        mode: "0644"
-        force: true
+- name: Add Fluent Bit APT repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/fluentbit-keyring.gpg] https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }} main"
+    filename: fluentbit
+    state: present
+    update_cache: true
 
-    - name: add td-agent repository
-      apt_repository:
-        repo: "deb [signed-by=/etc/apt/keyrings/td-agent.asc] {{ fluentd_apt_repository }} {{ ansible_distribution_release|lower }} contrib"
-        state: present
-        update_cache: true
-  when: ansible_pkg_mgr == "apt"
-
-- block:
-    - name: add GPG key from Treasure Data, Inc
-      # command: rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
-      rpm_key:
-        key: https://packages.treasuredata.com/GPG-KEY-td-agent
-        validate_certs: false
-        state: present
-
-    - name: add official repository
-      yum_repository:
-        name: treasuredata
-        description: TreasureData
-        baseurl: "http://packages.treasuredata.com/3/redhat/$releasever/$basearch"
-        file: td
-        gpgcheck: true
-        gpgkey: https://packages.treasuredata.com/GPG-KEY-td-agent
-  when: ansible_pkg_mgr == "yum"
-
-- name: Install fluentd (td-agent) and plugins dependencies
+- name: Install Fluent Bit
   package:
-    name: "{{ item }}"
+    name: fluent-bit
     state: present
-  with_items:
-    - td-agent
-    - "{{ fluentd_plugins_dependencies }}"
-  notify: restart td-agent
-
-- name: Check if systemd exists
-  stat: path=/lib/systemd/system/td-agent.service
-  register: tdagent_service
-
-- name: Check if default td-agent exists
-  stat: path=/etc/default/td-agent
-  register: tdagent_default
-
-- name: (systemd) Change the user who run td-agent
-  lineinfile: 'dest=/lib/systemd/system/td-agent.service backrefs=yes state=present regexp="^User=td-agent" line="User={{ cycloid_user_fluentd }}"'
-  when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
-
-- name: (systemd) Force a daemon reload
-  systemd: daemon_reload=yes
-  when: tdagent_service.stat.exists and ansible_service_mgr == 'systemd'
-  notify: restart td-agent
-
-- name: (default) Change the user who run td-agent
-  lineinfile: 'dest=/etc/default/td-agent state=present line="TD_AGENT_USER={{ cycloid_user_fluentd }}"'
-  when: tdagent_default.stat.exists
-  notify: restart td-agent
+    update_cache: true
+  notify: restart fluent-bit

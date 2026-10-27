@@ -21,21 +21,10 @@
 
 - include_tasks: install.yml
 
-- include_tasks: plugins.yml
-
 - include_tasks: configure.yml
 
-- include_tasks: metrics.yml
-  when: fluentd_metrics
-
-- include_tasks: cloudwatch.yml
-  when: fluentd_cloudwatch
-
-- include_tasks: docker.yml
-  when: fluentd_docker
-
-- name: Ensure fluentd (td-agent) service is enabled
+- name: Ensure fluent-bit service is enabled
   service:
-    name: td-agent
+    name: fluent-bit
     enabled: true
     use: service

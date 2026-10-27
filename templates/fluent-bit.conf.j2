@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+
+[SERVICE]
+    Flush           5
+    Log_Level       info
+    Parsers_File    parsers.conf
+    storage.metrics on
+
+{% for file in (cycloid_files_watched + cycloid_system_files_watched) %}
+[INPUT]
+    Name           tail
+    Tag            cycloid.{{ file.name }}
+    Path           {{ file.path }}
+    DB             /var/log/fluent-bit/cycloid.{{ file.name }}.db
+    Read_from_Head On
+
+{% endfor %}
+{% if fluentd_cloudwatch %}
+{% for file in (cycloid_files_watched + cycloid_system_files_watched) %}
+[OUTPUT]
+    Name              cloudwatch_logs
+    Match             cycloid.{{ file.name }}
+    region            {{ fluentd_cloudwatch_region }}
+    log_group_name    {{ project }}_{{ env }}
+    log_stream_name   {{ file.name }}
+    auto_create_group On
+    auto_create_stream On
+    log_retention_days {{ file.retention_in_day | default(default_retention_in_day) }}
+
+{% endfor %}
+{% endif %}
