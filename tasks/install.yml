@@ -11,12 +11,12 @@
 - name: Download Fluent Bit APT signing key
   get_url:
     url: "https://packages.fluentbit.io/fluentbit.key"
-    dest: /usr/share/keyrings/fluentbit-keyring.gpg
+    dest: /usr/share/keyrings/fluentbit-keyring.asc
     mode: "0644"
 
 - name: Add Fluent Bit APT repository
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/fluentbit-keyring.gpg] https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }} main"
+    repo: "deb [signed-by=/usr/share/keyrings/fluentbit-keyring.asc] https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }} main"
     filename: fluentbit
     state: present
     update_cache: true
