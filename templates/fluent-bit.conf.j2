@@ -24,7 +24,6 @@
     log_group_name    {{ project }}_{{ env }}
     log_stream_name   {{ file.name }}
     auto_create_group On
-    auto_create_stream On
     log_retention_days {{ file.retention_in_day | default(default_retention_in_day) }}
 
 {% endfor %}
